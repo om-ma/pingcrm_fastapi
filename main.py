@@ -2,7 +2,7 @@ from typing import Union
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.api_v1.api import api_router
+from app.api.v1.api import api_router
 
 app = FastAPI(title="PingCRM API")
 
