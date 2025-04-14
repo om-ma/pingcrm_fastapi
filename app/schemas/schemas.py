@@ -62,23 +62,24 @@ class Organization(OrganizationBase, TimestampSchema):
 class ContactBase(BaseModel):
     first_name: str
     last_name: str
-    email: Optional[str] = None
+    email: Optional[EmailStr] = None
     phone: Optional[str] = None
     address: Optional[str] = None
     city: Optional[str] = None
     region: Optional[str] = None
     country: Optional[str] = None
     postal_code: Optional[str] = None
+    organization_id: Optional[int] = None
 
 class ContactCreate(ContactBase):
-    account_id: int
-    organization_id: Optional[int] = None
+    pass
+
+class ContactUpdate(ContactBase):
+    pass
 
 class Contact(ContactBase, TimestampSchema):
     id: int
     account_id: int
-    organization_id: Optional[int] = None
-    deleted_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

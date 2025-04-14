@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "pingcrm"
 version = "0.1.0"
 authors = [
-  { name="Your Name", email="your.email@example.com" },
+  { name="Umair Azam", email="omairr.azam@gmail.com" },
 ]
 description = "PingCRM FastAPI Implementation"
 readme = "README.md"

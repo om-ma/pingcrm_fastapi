@@ -1,13 +1,10 @@
-from typing import Union
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.api.middleware import error_handler
 from app.api.v1.api import api_router
 
 app = FastAPI(title="PingCRM API")
 
-
-# CORS middleware configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,4 +13,5 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.middleware("http")(error_handler)
 app.include_router(api_router, prefix="/api/v1")

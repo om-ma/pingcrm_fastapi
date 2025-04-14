@@ -1,11 +1,27 @@
 from typing import Any, Dict, Generic, List, Optional, TypeVar, Union
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, EmailStr
 
 DataT = TypeVar('DataT')
 
 class JsonApiRelationship(BaseModel):
     data: Optional[Dict[str, Any]] = None
     links: Optional[Dict[str, str]] = None
+
+class JsonApiAttributes(BaseModel):
+    name: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    owner: Optional[bool] = None
+
+class JsonApiData(BaseModel):
+    type: str
+    id: Optional[str] = None
+    attributes: JsonApiAttributes
+
+class JsonApiRequest(BaseModel):
+    data: JsonApiData
 
 class JsonApiResource(BaseModel):
     id: str
@@ -40,6 +56,17 @@ class JsonApiResponse(BaseModel, Generic[DataT]):
             }
         }
     )
+
+class JsonApiError(BaseModel):
+    status: str
+    code: Optional[str] = None
+    title: str
+    detail: Optional[str] = None
+    source: Optional[Dict[str, Any]] = None
+    meta: Optional[Dict[str, Any]] = None
+
+class JsonApiErrorResponse(BaseModel):
+    errors: List[JsonApiError]
 
 def create_resource(
     type_name: str,
