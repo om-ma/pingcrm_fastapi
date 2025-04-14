@@ -3,6 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from app.db.base import Base
+from app.core.exceptions import NotFoundException
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
@@ -10,13 +11,16 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
     def __init__(self, model: Type[ModelType]):
-        """
-        CRUD object with default methods to Create, Read, Update, Delete (CRUD).
-        """
         self.model = model
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
         return db.query(self.model).filter(self.model.id == id).first()
+
+    def get_or_404(self, db: Session, id: Any, detail: Optional[str] = None) -> ModelType:
+        obj = self.get(db, id)
+        if not obj:
+            raise NotFoundException(detail=detail or f"{self.model.__name__} not found")
+        return obj
 
     def get_multi(
         self, db: Session, *, skip: int = 0, limit: int = 100
@@ -52,7 +56,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db_obj
 
     def remove(self, db: Session, *, id: int) -> ModelType:
-        obj = db.query(self.model).get(id)
+        obj = self.get_or_404(db, id)
         db.delete(obj)
         db.commit()
         return obj
