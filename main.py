@@ -8,9 +8,8 @@ app = FastAPI(title="PingCRM API")
 
 # Configure CORS
 origins = [
-    "https://pingcrm-reactjs.onrender.com",  # Production React frontend
-    "http://localhost:3000",  # Local React frontend
-    "http://127.0.0.1:3000",
+    "https://pingcrm-reactjs.onrender.com",
+    "*"
 ]
 
 app.add_middleware(
